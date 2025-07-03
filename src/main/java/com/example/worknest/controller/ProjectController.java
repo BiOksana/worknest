@@ -1,0 +1,46 @@
+package com.example.worknest.controller;
+
+import com.example.worknest.dto.ProjectCreateDto;
+import com.example.worknest.dto.ProjectDto;
+import com.example.worknest.service.ProjectService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/projects")
+public class ProjectController {
+
+    ProjectService service;
+
+    @Autowired
+    public ProjectController(ProjectService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<ProjectDto> getAll() {
+        return service.getAll();
+    }
+
+    @PostMapping
+    public ResponseEntity<ProjectDto> create(@Valid @RequestBody ProjectCreateDto dto) {
+        return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProjectDto> update(@PathVariable Long id, @Valid @RequestBody ProjectDto dto) {
+        return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.accepted().build();
+    }
+
+}
