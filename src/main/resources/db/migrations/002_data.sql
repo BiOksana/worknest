@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset oksana.bibikova:002
+
 INSERT INTO project (name, field, experience, deadline, description, status)
 VALUES
 ('Creating visual materials for social media', 'Design', 'MORE_THREE_YEARS', '2025-11-22',
