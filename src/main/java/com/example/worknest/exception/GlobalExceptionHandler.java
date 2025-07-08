@@ -38,13 +38,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         e.printStackTrace();
-        return new ResponseEntity<>("Invalid date format (expected format: yyyy-MM-dd) in date field.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleUniqueViolation(DataIntegrityViolationException e) {
         if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
-            return new ResponseEntity<>("A project with the same name already exists.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Data integrity error.", HttpStatus.INTERNAL_SERVER_ERROR);
     }

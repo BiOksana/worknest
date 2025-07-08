@@ -12,8 +12,8 @@ import java.util.List;
 public interface ProjectMapper {
 
     ProjectDto entityToDto(Project entity);
-    Project dtoToEntity(ProjectDto dto);
 
+    @Mapping(target = "vacancies", ignore = true)
     @Mapping(target = "status", constant = "ACTIVE")
     @Mapping(target = "id", ignore = true)
     Project createDtoToEntity(ProjectCreateDto dto);
