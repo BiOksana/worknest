@@ -16,6 +16,7 @@ target/
 ### IntelliJ IDEA ###
 .idea
 .env.properties
+.env
 *.iws
 *.iml
 *.ipr
@@ -32,3 +33,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+logs/

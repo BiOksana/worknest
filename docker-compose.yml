@@ -1,0 +1,36 @@
+services:
+  worknest-db-dev:
+    container_name: worknest-db-dev
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: worknest_dev
+    ports:
+      - "3308:3306"
+    volumes:
+      - db-storage:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  worknest:
+    container_name: worknest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://worknest-db-dev:3306/worknest_dev?autoReconnect=true
+      SPRING_PROFILES_ACTIVE: dev
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - worknest-db-dev
+    entrypoint: ["sh", "-c", "/wait-for-it.sh worknest-db-dev:3306 -- java -jar /workNest.jar"]
+
+volumes:
+  db-storage:
