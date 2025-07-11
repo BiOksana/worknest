@@ -8,6 +8,7 @@ import com.example.worknest.exception.WorkNestResourceNotFoundException;
 import com.example.worknest.mapper.VacancyMapper;
 import com.example.worknest.repository.ProjectRepository;
 import com.example.worknest.repository.VacancyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -87,6 +88,23 @@ class VacancyServiceTest {
         verify(repository, never()).save(any());
         verify(mapper, never()).entityToDto(any());
     }
+
+    @Test
+    void shouldThrowExceptionWhenProjectNotFound() {
+        Long id = 1L;
+        Vacancy vacancy = new Vacancy();
+        VacancyDto dto = new VacancyDto(1L, "New Test Name", "Design",
+                Experience.MORE_THREE_YEARS, "Ukraine", "Description", 999L);
+
+        when(repository.findById(id)).thenReturn(Optional.of(vacancy));
+        when(projectRepository.getReferenceById(999L))
+                .thenThrow(new EntityNotFoundException("Project not found"));
+
+        assertThrows(EntityNotFoundException.class, () -> service.update(id, dto));
+        verify(repository, never()).save(any());
+        verify(mapper, never()).entityToDto(any());
+    }
+
 
     @Test
     void delete() {
